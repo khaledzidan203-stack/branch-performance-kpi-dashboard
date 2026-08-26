@@ -1,0 +1,15 @@
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+*.tmp
+.env
+.env.*
+node_modules/
+__pycache__/
+*.pyc
+private/
+confidential/
+real-data/
+exports/
