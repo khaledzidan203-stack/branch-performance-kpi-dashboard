@@ -1,0 +1,6 @@
+[
+  {"title":"Close prior-day data entry","status":"Open","due":"Daily"},
+  {"title":"Review sales gap to 85% threshold","status":"Open","due":"Daily"},
+  {"title":"Check category target exceptions","status":"Open","due":"Twice weekly"},
+  {"title":"Export monthly KPI snapshot","status":"Planned","due":"Month end"}
+]

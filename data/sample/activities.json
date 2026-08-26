@@ -1,0 +1,6 @@
+[
+  {"date":"2026-07-11","type":"Inventory","title":"Cycle count - fast moving categories","owner":"Branch Team","priority":"High"},
+  {"date":"2026-07-12","type":"Commercial","title":"Review low-performing categories","owner":"Branch Manager","priority":"Medium"},
+  {"date":"2026-07-13","type":"Operations","title":"Customer service quality check","owner":"Shift Lead","priority":"Medium"},
+  {"date":"2026-07-15","type":"Performance","title":"Weekly employee KPI review","owner":"Branch Manager","priority":"High"}
+]

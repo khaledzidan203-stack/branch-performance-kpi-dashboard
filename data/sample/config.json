@@ -1,0 +1,16 @@
+{
+  "project":"Branch Performance KPI Dashboard",
+  "month":"2026-07",
+  "branch":"Demo Branch 01",
+  "currency":"SAR",
+  "targets":{
+    "sales":124000,
+    "coreSales":86000,
+    "averageBasket":82,
+    "pushRate":0.085
+  },
+  "statusRules":{
+    "sales":{"safe":0.85,"watch":0.80},
+    "operationalRate":{"safe":1.0}
+  }
+}
