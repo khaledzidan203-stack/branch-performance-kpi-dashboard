@@ -4,6 +4,18 @@ A recruiter-friendly **Data Analyst / Business Analyst portfolio project** that 
 
 > **Privacy note:** every record, employee name, branch name, target, category value, and operational event in this repository is synthetic. The public version deliberately uses generalized business terminology and does not contain confidential company information or proprietary datasets.
 
+## Featured Portfolio
+
+**Khaled Zidan — Healthcare & Business Data Analytics**
+
+[Saudi Healthcare Analytics](https://github.com/khaledzidan203-stack/saudi-healthcare-analytics) ·
+[Hospital360](https://github.com/khaledzidan203-stack/Hospital360) ·
+[Online Retail Growth & Customer Intelligence](https://github.com/khaledzidan203-stack/online-retail-growth-customer-intelligence) ·
+[Pharmacy Category Management](https://github.com/khaledzidan203-stack/pharmacy-category-management) ·
+[Regional Sales Performance](https://github.com/khaledzidan203-stack/regional-sales-analytics-portfolio)
+
+**Core stack:** Power BI · SQL · Python · DAX · Analytics Engineering · Healthcare / Pharmacy / Retail Analytics
+
 ## Executive summary
 
 The project converts branch-level operational data into an interactive management view. Users can filter by date, employee, and sales segment, while KPI cards, employee metrics, and trend visuals recalculate from the underlying sample CSV/JSON files.
