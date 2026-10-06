@@ -1,6 +1,6 @@
 # Power BI Mapping
 
-The static JavaScript dashboard can be reproduced in Power BI using the same public data model.
+> **Implementation status — design reference only.** This document explains how the browser analytical model could be translated into Power BI. The repository does not contain a committed PBIP/PBIR/TMDL or PBIX runtime implementation.
 
 ## Suggested tables
 
@@ -15,7 +15,7 @@ The static JavaScript dashboard can be reproduced in Power BI using the same pub
 - `DimDate[Date]` 1:* `FactDailySales[Date]`
 - `DimEmployee[EmployeeID]` 1:* `FactDailySales[EmployeeID]`
 
-## Example DAX measures
+## Example measures
 
 ```DAX
 Actual Sales =
@@ -44,19 +44,14 @@ Core Basket =
 DIVIDE ( [Core Retail Sales], [Core Customers], 0 )
 
 Operational Product Rate =
-DIVIDE ( SUM ( FactDailySales[OperationalProductSales] ), [Core Retail Sales], 0 )
-
-Achievement % =
-DIVIDE ( [Actual Sales], [Period Sales Target], 0 )
-
-Sales Status =
-SWITCH (
-    TRUE(),
-    [Achievement %] >= 0.85, "SAFE",
-    [Achievement %] >= 0.80, "WATCH",
-    "DANGER"
+DIVIDE (
+    SUM ( FactDailySales[OperationalProductSales] ),
+    [Core Retail Sales],
+    0
 )
 ```
+
+A Power BI implementation should also reproduce the segment-specific sales/customer logic and the config-governed status thresholds rather than hard-code conflicting rules.
 
 ## Recommended report pages
 
@@ -66,11 +61,6 @@ SWITCH (
 4. Operations / Actions
 5. KPI Definitions / Data Quality
 
-## Recommended visuals
+## Evidence boundary
 
-- KPI cards for target, sales, achievement, customer count, and basket.
-- Line chart for daily trend.
-- Matrix for employee performance.
-- Bar chart for category achievement.
-- Slicers for date, employee, and sales segment.
-- Conditional formatting for SAFE/WATCH/DANGER.
+The current implemented reporting artifact is the HTML/CSS/JavaScript dashboard. This document is not Power BI runtime evidence.
