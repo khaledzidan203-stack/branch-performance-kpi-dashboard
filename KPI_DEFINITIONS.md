@@ -1,49 +1,62 @@
 # KPI Definitions
 
-This document defines the public, generalized KPI logic used by **Branch Performance KPI Dashboard**.
+This document defines the KPI logic implemented by **Branch Performance KPI Dashboard**.
 
 | KPI | Definition | Formula | Grain / Scope |
 |---|---|---|---|
-| Sales Target | Planned sales for the selected period | Monthly Sales Target × Selected Calendar Days / Full Sample Days | Branch / period |
-| Actual Sales | Sales recorded in the selected filters | SUM(Sales) | Branch, employee, or segment |
-| Achievement % | Attainment of the relevant sales target | Actual Sales / Period Target | Branch / period |
-| Customer Count | Number of customer transactions | SUM(Customer Count) | Selected view |
-| Average Basket Value | Average sales value per customer | Actual Sales / Customer Count | Selected view |
-| Core Retail Sales | Generalized standard-retail component | Total Sales − Channel A − Channel B − Channel C | Row then aggregate |
-| Special Channel Sales | Generalized alternate-channel component | Total Sales − Core Retail Sales | Row then aggregate |
-| Core Retail Customers | Customers associated with core retail | Total Customers − Special Customers | Row then aggregate |
-| Core Retail Basket | Average core-retail sales per core customer | Core Retail Sales / Core Retail Customers | Employee / selected view |
-| Operational Product Rate | Operational-product sales as share of core retail | Operational Product Sales / Core Retail Sales | Employee / selected view |
-| Category Achievement | Category performance vs category target | Category Sales / Category Target | Category |
-| Active Days | Days containing sales activity | DISTINCTCOUNT(Date where Sales > 0) | Selected view |
+| Sales Target | Planned sales for the selected period | Monthly Sales Target × Selected Calendar Days / Full Sample Days | Branch / selected segment / period |
+| Actual Sales | Sales under the active Date, Employee and Sales Segment filters | SUM(Selected Segment Sales) | Selected view |
+| Achievement % | Attainment of the relevant selected-segment target | Actual Sales / Period Target | Selected view |
+| Customer Count | Customers associated with the selected sales segment | SUM(Selected Segment Customers) | Selected view |
+| Average Basket Value | Average selected-segment sales per selected-segment customer | Actual Sales / Customer Count | Selected view |
+| Core Retail Sales | Standard-retail component | Total Sales − Channel A − Channel B − Channel C | Row then aggregate |
+| Special Channel Sales | Alternate-channel component | Total Sales − Core Retail Sales | Row then aggregate |
+| Core Retail Customers | Customers associated with Core Retail | Total Customers − Special Customers | Row then aggregate |
+| Core Retail Basket | Average Core Retail sales per Core Retail customer | Core Retail Sales / Core Retail Customers | Core metric |
+| Operational Product Rate | Operational-product sales as share of Core Retail | Operational Product Sales / Core Retail Sales | Core metric |
+| Category Achievement | Category performance versus category target | Category Sales / Category Target | Category |
+| Active Days | Days with positive selected-segment sales | DISTINCTCOUNT(Date) | Selected view |
+
+## Sales Segment behavior
+
+The active Sales Segment filter controls:
+
+- Actual Sales;
+- Customer Count;
+- Average Basket;
+- period target selection;
+- daily trend;
+- employee Sales / Customers / Average Basket.
+
+**Core Retail Basket** and **Operational Product Rate** remain Core Retail measures even when Special Channel is selected. Their business meaning is not silently redefined by the filter.
 
 ## Status classifications
 
+Thresholds are read from `data/sample/config.json`.
+
 ### Sales achievement status
 
-- **SAFE:** Achievement ≥ 85%
-- **WATCH:** Achievement ≥ 80% and < 85%
-- **DANGER:** Achievement < 80%
+- **SAFE:** Achievement ≥ configured `statusRules.sales.safe` (currently 85%)
+- **WATCH:** Achievement ≥ configured `statusRules.sales.watch` and below SAFE (currently 80%–84.99%)
+- **DANGER:** Achievement below WATCH
 
-These thresholds are demonstration settings stored in `data/sample/config.json`.
+### Point-target status
 
-### Operational-rate status
+Employee Core Basket and Operational Product Rate use the configured point-target attainment factor:
 
-Operational rate KPIs are treated as point-in-time performance targets rather than sales forecasts:
+- **SAFE:** actual ≥ target × `statusRules.operationalRate.safe`
+- **DANGER:** otherwise
 
-- **SAFE:** actual rate ≥ configured target
-- **DANGER:** actual rate < configured target
-
-A WATCH band is intentionally not applied to these rate metrics in the public demo.
+The current configuration requires 100% target attainment.
 
 ## Division-by-zero rule
 
-If the denominator of a basket/rate calculation is zero, the result is treated as zero. This prevents undefined or infinite values in the dashboard.
+If a denominator is zero, the result is treated as zero. This prevents Infinity/NaN in the analytical UI.
 
 ## Period target allocation
 
-The sample project uses a calendar-day allocation:
+The synthetic implementation uses:
 
-`Period Target = Monthly Target × Selected Days / Full Sample Days`
+`Period Target = Monthly Target × Selected Calendar Days / Full Sample Days`
 
-This is a transparent demonstration assumption; production implementations may instead use working-day weights, day-of-week seasonality, or branch operating calendars.
+This is a transparent demo assumption. A production implementation could use working-day weights, day-of-week seasonality or branch operating calendars.
