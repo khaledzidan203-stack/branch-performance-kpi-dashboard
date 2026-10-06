@@ -1,55 +1,63 @@
 # Business Logic
 
-## Public design principle
+## Design principle
 
-This repository preserves the analytical pattern of a branch KPI management application while replacing business-specific labels, values, and rules with generalized portfolio-safe examples.
+This repository implements a generalized branch-performance analytical pattern using synthetic data and public-safe terminology.
 
 ## Calculation sequence
 
 1. Read employee-day input rows.
-2. Calculate row-level sales segments and customer metrics.
-3. Apply global filters (date, employee, segment).
-4. Aggregate filtered rows.
-5. Adjust monthly sales targets to the selected calendar period.
-6. Calculate target achievement and management status.
-7. Calculate employee basket and operational-rate measures.
-8. Aggregate category target performance.
-9. Render trend, KPI, employee, category, activity, and reminder views.
+2. Calculate row-level Core Retail, Special Channel and customer components.
+3. Apply Date and Employee filters.
+4. Resolve the active Sales Segment for sales/customer measures.
+5. Aggregate numerators and denominators.
+6. Adjust the relevant branch sales target to the selected calendar period.
+7. Classify sales achievement using config-driven SAFE / WATCH / DANGER thresholds.
+8. Calculate employee Sales, Customers and Average Basket in the active segment.
+9. Preserve Core Basket and Operational Product Rate as Core Retail metrics.
+10. Aggregate category target performance.
+11. Render trend, KPI, employee, category, activity and reminder views.
 
 ## Sales segments
 
-The public application uses two generalized analytical segments:
+- **Core Retail** — standard branch-sales component.
+- **Special Channel** — alternate sales component derived from anonymous channel inputs.
+- **All Sales** — total of both components.
 
-- **Core Retail** — a standard branch-sales component.
-- **Special Channel** — an alternate sales component derived from three anonymous input channels.
-
-These names intentionally avoid exposing proprietary company terminology.
+The generalized names avoid exposing proprietary business terminology.
 
 ## Target ownership
 
-Sales targets are branch-level measures. Selecting a single employee changes the actual results shown but does not create or imply an employee share of the branch target.
+Sales targets are branch-level measures. Selecting a single employee changes actual results but does not create or imply an allocated employee share of the branch target.
 
-Employee performance is assessed using employee-level operational metrics such as basket and product-rate performance.
+Employee operational performance is assessed through employee-level metrics such as Core Basket and Operational Product Rate.
 
-## Status logic
+## Status governance
 
-Sales status uses management thresholds defined in configuration:
+The implementation reads status rules from `data/sample/config.json`.
+
+Sales classification currently resolves to:
 
 - SAFE ≥ 85%
 - WATCH 80%–84.99%
 - DANGER < 80%
 
-Employee operational metrics use full target attainment:
-
-- SAFE when actual ≥ target
-- DANGER when actual < target
+Point-target metrics are SAFE only when the configured target-attainment factor is met.
 
 ## Filtering
 
-Date, employee, and sales-segment filters recalculate the analytical view. Filters affect KPI cards, the daily trend, and employee calculations.
+Date, Employee and Sales Segment filters recalculate:
 
-Category targets and operational schedules remain reference datasets and are not employee-level facts.
+- Overview KPIs;
+- daily sales trend;
+- employee Sales;
+- employee Customers;
+- employee Average Basket.
+
+Core Basket and Operational Product Rate intentionally remain Core Retail measures.
+
+Category targets and operational schedules are separate reference datasets and are not employee-level facts.
 
 ## Data completeness
 
-The sample data covers a limited fictional period. The project does not claim to predict a real month-end outcome. It demonstrates calculations and dashboard behavior only.
+The sample covers a limited synthetic period. The project does not claim forecasting, causal inference or real month-end prediction.
