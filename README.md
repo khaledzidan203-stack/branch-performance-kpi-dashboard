@@ -1,273 +1,336 @@
 # Branch Performance KPI Dashboard
 
-A recruiter-friendly **Data Analyst / Business Analyst portfolio project** that demonstrates how a retail branch can monitor sales, customers, employee performance, product/category performance, operational targets, reminders, upcoming activities, trends, and performance status in one interactive dashboard.
+## Target Tracking, Sales Drivers, Employee KPIs & Operational Action
 
-> **Privacy note:** every record, employee name, branch name, target, category value, and operational event in this repository is synthetic. The public version deliberately uses generalized business terminology and does not contain confidential company information or proprietary datasets.
+[![Repository Validation](https://github.com/khaledzidan203-stack/branch-performance-kpi-dashboard/actions/workflows/repository-validation.yml/badge.svg)](https://github.com/khaledzidan203-stack/branch-performance-kpi-dashboard/actions/workflows/repository-validation.yml)
+[![Deploy static dashboard to GitHub Pages](https://github.com/khaledzidan203-stack/branch-performance-kpi-dashboard/actions/workflows/pages.yml/badge.svg)](https://github.com/khaledzidan203-stack/branch-performance-kpi-dashboard/actions/workflows/pages.yml)
 
-## Featured Portfolio
+Branch Performance KPI Dashboard is a dependency-free analytical web application for monitoring a synthetic retail branch across sales targets, customer volume, basket value, employee performance, category achievement and operational actions.
 
-**Khaled Zidan — Healthcare & Business Data Analytics**
+> **Data boundary:** every branch, employee, customer count, transaction value, category, activity and reminder in this repository is synthetic. No real company, employee, customer or transaction data is included.
 
-[Saudi Healthcare Analytics](https://github.com/khaledzidan203-stack/saudi-healthcare-analytics) ·
-[Hospital360](https://github.com/khaledzidan203-stack/Hospital360) ·
-[Online Retail Growth & Customer Intelligence](https://github.com/khaledzidan203-stack/online-retail-growth-customer-intelligence) ·
-[Pharmacy Category Management](https://github.com/khaledzidan203-stack/pharmacy-category-management) ·
-[Regional Sales Performance](https://github.com/khaledzidan203-stack/regional-sales-analytics-portfolio)
+<img src="docs/assets/Branch%20Performance%20KPI%20Dashboard.png" alt="Branch Performance KPI Dashboard overview" width="100%">
 
-**Core stack:** Power BI · SQL · Python · DAX · Analytics Engineering · Healthcare / Pharmacy / Retail Analytics
+> **Visual evidence note:** the infographic is a presentation schematic. The implemented application currently contains five pages and three global filters: Date, Employee and Sales Segment. Exact KPI logic is governed by `js/app.js`, `data/sample/config.json` and the KPI documentation.
 
-## Executive summary
+**Start here:** [Case study](docs/CASE_STUDY.md) · [Technical walkthrough](docs/TECHNICAL_WALKTHROUGH.md) · [Evidence map](docs/PROJECT_EVIDENCE_MAP.md) · [Project index](docs/PROJECT_INDEX.md) · [Final validation](docs/FINAL_RELEASE_VALIDATION.md)
 
-The project converts branch-level operational data into an interactive management view. Users can filter by date, employee, and sales segment, while KPI cards, employee metrics, and trend visuals recalculate from the underlying sample CSV/JSON files.
+## Project at a glance
 
-The repository is intentionally lightweight: the dashboard is built with HTML, CSS, and vanilla JavaScript, so reviewers can inspect the analytical logic directly without a complex framework.
+| Area | Current implementation |
+|---|---|
+| Application | Static HTML/CSS/Vanilla JavaScript analytical dashboard |
+| Runtime dependencies | None |
+| Synthetic period | 1–10 July 2026 |
+| Daily fact grain | Employee × Date |
+| Employees | 3 fictional employees |
+| Daily sales rows | 30 |
+| Categories | 6 |
+| Global filters | Date range · Employee · Sales Segment |
+| Pages | Overview · Employees · Categories · Operations · Methodology |
+| Deployment | GitHub Pages |
+| SQL | Optional relational reference model + analytical queries |
+| Power BI | Mapping/design documentation only; no PBIP/PBIR/TMDL runtime artifact |
+| Automated validation | Node-based KPI/data regression suite + repository quality gate |
 
 ## Business problem
 
-Retail branch managers often need to answer several questions at the same time: Are sales on target? Is customer traffic supporting the result? Is average basket value healthy? Which employee or category is underperforming? Which operational metrics require immediate intervention? What activities and reminders are coming next?
+A branch manager needs more than one sales total. Performance should be decomposed into:
 
-When these measures are spread across spreadsheets and manual reports, performance reviews become slow and inconsistent. This project demonstrates a compact KPI-management approach that puts target achievement, trend analysis, employee performance, category performance, and operational follow-up into one interface.
+- **target attainment** — is the selected period on plan?
+- **customer volume** — how many customers contributed to sales?
+- **basket value** — how much value came from each customer?
+- **employee performance** — which employee-level KPIs need attention?
+- **category performance** — which categories are ahead of or behind target?
+- **operational actions** — what activities and reminders should be reviewed next?
 
-## Project objectives
+The project keeps these questions separate while letting the user change the active date period, employee and sales segment.
 
-- Monitor actual sales against a defined branch sales target.
-- Calculate achievement percentage and management status.
-- Track customer count and Average Basket Value.
-- Compare employee sales, customer, basket, and operational-rate metrics.
-- Analyze product/category sales against targets.
-- Surface upcoming activities and recurring reminders.
-- Support date, employee, and sales-segment filtering.
-- Demonstrate transparent KPI calculations that can be audited in source code.
+## Analytical flow
 
-## Dataset description
+```text
+Synthetic CSV / JSON
+        ↓
+Browser loading & parsing
+        ↓
+Row-level sales/customer decomposition
+        ↓
+Global filter context
+Date · Employee · Sales Segment
+        ↓
+Aggregated KPI calculations
+        ↓
+Target / status rules from config.json
+        ↓
+Interactive HTML / SVG / tables
+        ↓
+Management review & operational actions
+```
 
-The public dataset is synthetic and intentionally small enough to understand quickly.
+All calculations run in the browser. No backend, database server or external chart library is required for the deployed dashboard.
 
-| File | Purpose |
-|---|---|
-| `data/sample/daily_sales.csv` | Daily employee-level sales, customer counts, and generalized channel inputs |
-| `data/sample/category_sales.csv` | Category actual sales and targets |
-| `data/sample/config.json` | Demo branch, month, KPI targets, and status thresholds |
-| `data/sample/activities.json` | Upcoming operational activities |
-| `data/sample/reminders.json` | Operational reminders |
+## Global filter behavior
 
-The sample data represents a fictional retail branch with three fictional employees. It is not derived from a real customer, company, branch, pharmacy, prescription, employee, or proprietary source.
+The three implemented filters are:
 
-## Tools and technologies
+1. **Date From / Date To**
+2. **Employee**
+3. **Sales Segment** — All Sales / Core Retail / Special Channel
 
-- HTML5
-- CSS3
-- Vanilla JavaScript (ES6+)
-- CSV and JSON as portable analytical data sources
-- SVG for lightweight trend visualization
-- Optional SQL reference scripts for demonstrating relational modeling
-- Power BI mapping documentation for showing how the same model can be implemented in BI tooling
-- Git / GitHub for version control and portfolio delivery
+The Overview KPI cards, daily trend and employee table recalculate from the active filter context.
 
-No build tool, framework, database, API key, credential, or paid dependency is required to run the web dashboard.
+The employee table now respects the selected sales segment for:
 
-## Data preparation
+- Sales
+- Customers
+- Average Basket
 
-The dashboard follows a simple analytical pipeline:
+The following remain intentionally **Core Retail metrics** regardless of the selected sales segment:
 
-1. Load synthetic CSV and JSON source files.
-2. Parse daily employee-level records.
-3. Convert numeric fields to analytical values.
-4. Derive core/special segment values from generalized channel inputs.
-5. Calculate customer and basket metrics.
-6. Aggregate by selected period, employee, and segment.
-7. Apply target and status rules.
-8. Render KPI cards, tables, category bars, trend visuals, activities, and reminders.
+- Core Basket
+- Operational Product Rate
 
-See `docs/DATA_PREPARATION.md` for the detailed flow.
+This preserves their defined business meaning instead of silently redefining them under a Special Channel filter.
+
+Category performance and operational schedules use separate reference datasets and are not employee-level facts.
+
+## KPI framework
+
+### Sales performance
+
+- **Actual Sales** = selected segment sales under the active filter context
+- **Period Target** = configured monthly target × selected calendar days / full sample days
+- **Achievement %** = Actual Sales / Period Target
+- **Customer Count** = selected segment customer count
+- **Average Basket** = selected segment sales / selected segment customers
+- **Active Days** = distinct days with positive selected-segment sales
+
+### Core Retail metrics
+
+- **Core Retail Sales** = Total Sales − Channel A − Channel B − Channel C
+- **Core Retail Customers** = Total Customers − Special Customers
+- **Core Basket** = Core Retail Sales / Core Retail Customers
+- **Operational Product Rate** = Operational Product Sales / Core Retail Sales
+
+Ratios are calculated from aggregated numerators and denominators rather than averaging row-level percentages.
+
+## Config-driven management status
+
+The dashboard reads thresholds from `data/sample/config.json`.
+
+Current synthetic configuration:
+
+| Rule | Threshold |
+|---|---:|
+| Sales SAFE | ≥ 85% |
+| Sales WATCH | ≥ 80% and < 85% |
+| Sales DANGER | < 80% |
+| Point-target metrics | SAFE only when the configured target is fully achieved |
+
+The JavaScript no longer duplicates the sales thresholds as hard-coded business logic. Status classification reads the configuration directly.
+
+## Current synthetic baseline
+
+For the full 1–10 July sample:
+
+| Metric | Value |
+|---|---:|
+| Actual Sales | SAR 124,880 |
+| Branch Sales Target | SAR 124,000 |
+| Achievement | 100.71% |
+| Customers | 1,643 |
+| Average Basket | SAR 76.01 |
+| Core Retail Sales | SAR 91,330 |
+| Special Channel Sales | SAR 33,550 |
+| Operational Product Rate | 10.64% |
+| Category Sales | SAR 115,010 |
+| Category Targets | SAR 123,000 |
+| Aggregate Category Achievement | 93.50% |
+
+These values describe the committed synthetic sample only.
+
+## Dashboard pages
+
+### 1. Overview
+
+Shows:
+
+- Actual Sales
+- relevant period target
+- Achievement %
+- Customer Count
+- Average Basket
+- Operational Product Rate
+- Active Days
+- daily sales trend
+
+### 2. Employees
+
+Shows filter-aware employee Sales, Customers and Average Basket, alongside Core Basket and Operational Product Rate with status classification.
+
+### 3. Categories
+
+Compares six synthetic categories against category targets.
+
+### 4. Operations
+
+Displays upcoming synthetic activities and recurring reminders.
+
+### 5. Methodology
+
+Explains KPI formulas and status logic inside the application.
 
 ## Data model
 
-The browser implementation uses a lightweight dimensional concept:
+### Daily sales fact
 
-- **FactDailySales** — date × employee observations.
-- **DimEmployee** — employee identifier and display name.
-- **DimDate** — date and period context.
-- **FactCategoryPerformance** — category actual and target values.
-- **OperationalActivities** — dated branch actions.
-- **Reminders** — recurring operational follow-up items.
-- **Config / Targets** — branch-level target settings and status thresholds.
+Grain:
 
-See `docs/DATA_MODEL.md` and `sql/schema.sql`.
+**one employee on one date**
 
-## KPIs
+Fields include total sales, anonymous channel components, operational-product sales, total customers and special-channel customers.
 
-Core KPIs demonstrated in the public version include:
+### Supporting datasets
 
-| KPI | Calculation |
-|---|---|
-| Sales Target | Configured target adjusted to the selected calendar period |
-| Actual Sales | Sum of sales in the selected view |
-| Achievement % | Actual Sales / Period Sales Target |
-| Customer Count | Sum of customer transactions in the selected view |
-| Average Basket Value | Actual Sales / Customer Count |
-| Core Retail Basket | Core Retail Sales / Core Retail Customers |
-| Operational Product Rate | Selected operational-product sales / Core Retail Sales |
-| Category Achievement | Category Sales / Category Target |
-| Active Days | Distinct days with recorded sales |
+- `category_sales.csv` — one row per category for the demo period
+- `config.json` — branch metadata, targets and status rules
+- `activities.json` — synthetic operational actions
+- `reminders.json` — synthetic recurring reminders
 
-Sales management status is generalized as **SAFE ≥ 85%**, **WATCH = 80%–84.99%**, and **DANGER < 80%**. Operational-rate indicators use a separate point-in-time rule: the configured rate target must be fully achieved to be SAFE.
+See [Data Model](docs/DATA_MODEL.md) and [Data Dictionary](DATA_DICTIONARY.md).
 
-Full definitions and assumptions are in `KPI_DEFINITIONS.md`.
+## Implemented front-end architecture
 
-## Analytical methodology
+```text
+index.html
+   ├── css/styles.css
+   ├── js/app.js
+   └── data/sample/
+          ├── daily_sales.csv
+          ├── category_sales.csv
+          ├── config.json
+          ├── activities.json
+          └── reminders.json
+```
 
-The project emphasizes four analytical ideas:
+The dashboard uses native HTML, CSS, JavaScript and inline SVG rendering.
 
-**Target variance analysis.** Actual sales are compared with period-adjusted targets to show how far performance is from plan.
+## SQL boundary
 
-**Driver analysis.** Customer Count and Average Basket Value separate volume from value-per-customer behavior, helping a reviewer understand *why* sales changed.
+The `sql/` directory contains:
 
-**Employee performance analysis.** Employee-level sales, customers, basket values, and operational rates are calculated from transaction aggregates rather than assigned portions of the branch sales target.
+- `schema.sql` — optional relational reference model
+- `analysis_queries.sql` — example branch, employee and category analytics
 
-**Category and operational analysis.** Product/category performance is measured against category targets, while upcoming activities and reminders connect analysis to operational action.
+This is a **reference translation of the analytical model**, not the runtime engine behind the browser application.
 
-## Dashboard / report structure
+## Power BI boundary
 
-- **Overview** — KPI cards, achievement status, active days, and daily trend.
-- **Employees** — employee-level performance table and status metrics.
-- **Categories** — category target achievement comparison.
-- **Operations** — upcoming activities and reminders.
-- **Methodology** — concise definitions and calculation notes inside the application.
+`docs/POWER_BI_MAPPING.md` describes how the same analytical design could be reproduced in Power BI with a date dimension, employee dimension, daily-sales fact and DAX measures.
 
-Global filters for date, employee, and sales segment remain visible above the dashboard pages.
+There is currently **no committed PBIP/PBIR/TMDL or PBIX runtime implementation**. Power BI is therefore documented as a mapping/design reference only.
 
-## Key insights demonstrated by the project
+## Automated validation
 
-The repository demonstrates *how* an analyst can identify insights rather than claiming any real-world business result. With the included synthetic data, a reviewer can observe examples such as:
+The repository quality gate verifies:
 
-- whether selected-period sales are above or below the management threshold;
-- whether a change in sales is associated with customer count or basket value;
-- which fictional employee has the strongest basket or operational rate;
-- which synthetic product category is closest to or furthest from its target;
-- how the same measures change when filtering to a specific employee, date range, or segment.
+- 30 daily rows;
+- 10 distinct dates;
+- 3 fictional employees;
+- 6 categories;
+- full-sample sales/customer/core/special baselines;
+- row-level decomposition;
+- denominator-safe calculations;
+- employee Sales Segment filter behavior;
+- Core Basket / Product Rate semantic stability;
+- config-driven sales thresholds;
+- config-driven point-target status logic;
+- required presentation/documentation files;
+- protected synthetic data and reference SQL artifacts.
 
-These are demonstrable behaviors of the included sample data—not claims about any real company.
+The test suite uses Node's built-in modules only. There are no npm runtime dependencies.
 
 ## Screenshots
 
+### Overview
+
 ![Dashboard overview](screenshots/dashboard-overview.png)
+
+### Employee performance
 
 ![Employee performance](screenshots/employee-performance.png)
 
-## Repository structure
+These screenshots are retained examples from the implemented dashboard.
 
-```text
-branch-performance-kpi-dashboard/
-├── README.md
-├── LICENSE
-├── .gitignore
-├── CHANGELOG.md
-├── CONTRIBUTING.md
-├── KPI_DEFINITIONS.md
-├── DATA_DICTIONARY.md
-├── BUSINESS_LOGIC.md
-├── PORTFOLIO_NOTES.md
-├── index.html
-├── css/
-│   └── styles.css
-├── js/
-│   └── app.js
-├── data/
-│   └── sample/
-│       ├── daily_sales.csv
-│       ├── category_sales.csv
-│       ├── config.json
-│       ├── activities.json
-│       └── reminders.json
-├── screenshots/
-│   ├── dashboard-overview.png
-│   └── employee-performance.png
-├── docs/
-│   ├── ARCHITECTURE.md
-│   ├── BUSINESS_REQUIREMENTS.md
-│   ├── DATA_MODEL.md
-│   ├── DATA_PREPARATION.md
-│   ├── INSTALLATION.md
-│   ├── USAGE.md
-│   ├── POWER_BI_MAPPING.md
-│   ├── PRIVACY_AND_SYNTHETIC_DATA.md
-│   └── TESTING.md
-├── sql/
-│   ├── schema.sql
-│   └── analysis_queries.sql
-└── examples/
-    └── example_output.md
-```
+## Quick Start
 
-## Installation / setup
+Because the browser loads local CSV/JSON files, serve the repository over HTTP.
 
-Because the application reads local CSV/JSON files, run it through a simple local web server.
-
-### Option 1 — Python
+### Python
 
 ```bash
 python -m http.server 8000
 ```
 
-Then open `http://localhost:8000`.
+Then open:
 
-### Option 2 — VS Code Live Server
+`http://localhost:8000`
 
-Open the repository in VS Code and use the Live Server extension on `index.html`.
+### VS Code
 
-There is no `requirements.txt` or `package.json` because the dashboard has **zero runtime package dependencies**.
+Open `index.html` with Live Server.
 
-## How to use
+### Run analytical tests
 
-1. Open the dashboard through a local server.
-2. Review the Overview KPI cards.
-3. Change **Date From / Date To** to test period analysis.
-4. Choose a fictional employee to isolate individual performance.
-5. Choose **Core Retail** or **Special Channel** to compare generalized sales segments.
-6. Open Employees to review employee-level KPIs.
-7. Open Categories to compare category target achievement.
-8. Open Operations to see planned activities and reminders.
-9. Inspect `js/app.js` to review the analytical calculations.
+```bash
+node tests/dashboard.test.js
+node scripts/validate_repository.js
+```
 
-## Design choices
+No `npm install` is required.
 
-- **Vanilla JavaScript** keeps the analytical logic visible to recruiters.
-- **CSV/JSON** makes the data easy to inspect and replace.
-- **No external chart library** keeps the demo dependency-free.
-- **Separate sales and operational status logic** avoids treating all KPIs as if they had the same threshold behavior.
-- **Generalized segment names** demonstrate the analytical design without exposing internal business terminology.
-- **Synthetic data by design** makes the repository safe for a public portfolio.
+## Repository structure
 
-## Skills demonstrated
+```text
+index.html                  interactive application shell
+css/styles.css              responsive dashboard design
+js/app.js                   analytical engine + filters + rendering
+data/sample/                synthetic CSV/JSON inputs
+tests/dashboard.test.js     KPI and filter regression tests
+scripts/                    repository contract validation
+screenshots/                retained implemented-dashboard evidence
+sql/                        optional relational reference model
+docs/                       technical and business documentation
+docs/assets/                presentation assets
+.github/workflows/          validation + GitHub Pages deployment
+```
 
-- Business requirements translation
-- KPI definition and governance
-- Data cleaning and transformation logic
-- Dimensional/data-model thinking
-- Aggregation and period filtering
-- Target vs actual analysis
-- Customer and basket analysis
-- Employee performance analysis
-- Product/category analysis
-- Trend analysis
-- Dashboard UX and information hierarchy
-- JavaScript-based analytics
-- SQL modeling concepts
-- Power BI model translation
-- Documentation and stakeholder communication
-- Data privacy and portfolio-safe anonymization
+## Documentation
 
-## Future improvements
+- [Project Index](docs/PROJECT_INDEX.md)
+- [Case Study](docs/CASE_STUDY.md)
+- [Technical Walkthrough](docs/TECHNICAL_WALKTHROUGH.md)
+- [Project Evidence Map](docs/PROJECT_EVIDENCE_MAP.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Business Requirements](docs/BUSINESS_REQUIREMENTS.md)
+- [Data Model](docs/DATA_MODEL.md)
+- [Data Preparation](docs/DATA_PREPARATION.md)
+- [KPI Definitions](KPI_DEFINITIONS.md)
+- [Business Logic](BUSINESS_LOGIC.md)
+- [Testing](docs/TESTING.md)
+- [Privacy & Synthetic Data](docs/PRIVACY_AND_SYNTHETIC_DATA.md)
+- [Power BI Mapping](docs/POWER_BI_MAPPING.md)
+- [Final Release Validation](docs/FINAL_RELEASE_VALIDATION.md)
 
-- Add year/month selectors and multiple synthetic periods.
-- Add forecast scenarios with explicit data-completeness controls.
-- Add CSV upload for user-provided demo data.
-- Add automated unit tests for KPI boundary conditions.
-- Add richer category drill-through and waterfall variance analysis.
-- Add a Power BI `.pbix` implementation using the documented data model.
-- Add GitHub Pages deployment workflow.
+## Limitations
 
-## License
+- The dataset is intentionally small and synthetic.
+- The demo uses calendar-day target allocation rather than working-day weighting.
+- Category data is period-level reference data rather than date/employee-grained fact data.
+- Operational activities and reminders are illustrative.
+- The browser CSV parser assumes the controlled sample schema and is not a general RFC-complete CSV parser.
+- SQL is a reference implementation, not the dashboard runtime.
+- Power BI is design/mapping documentation only.
+- No forecasting or causal inference is claimed.
 
-MIT License. See `LICENSE`.
+Licensed under the [MIT License](LICENSE).
