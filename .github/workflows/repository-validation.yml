@@ -1,0 +1,31 @@
+name: Repository Validation
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    name: Branch KPI analytical quality gate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate repository contract
+        run: node scripts/validate_repository.js
+
+      - name: Run analytical regression tests
+        run: node tests/dashboard.test.js
+
+      - name: Syntax check JavaScript
+        run: |
+          node --check js/app.js
+          node --check tests/dashboard.test.js
+          node --check scripts/validate_repository.js
